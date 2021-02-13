@@ -1,14 +1,16 @@
 import './App.css';
-import SideNavBar from './components/SideNavBar'
+import DepartmentCourseTree from './components/DepartmentCourseTree'
+
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
+
 
 function App() {
   return (
     <>
     <Router>
-      <SideNavBar/>
+      <DepartmentCourseTree/>
       <Switch>
-        <Route path ='/' />
+        <Route exact path ='/'/>
       </Switch>
     </Router>
     </>

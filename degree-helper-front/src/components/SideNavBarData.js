@@ -49,7 +49,7 @@ export const SideBarData = [
     },
     {
         title:'Cinema Studies',
-        path: '/Cinema Studies',
+        path: '/CinemaStudies',
         icon: <MdIcons.MdLocalMovies/>,
         cName: 'nav-text',
     },
@@ -230,7 +230,7 @@ export const SideBarData = [
     {
         title:'Political Science',
         path: '/PoliticalScience',
-        icon: <GiIcons.GiPodiumWinner/>,
+        icon: <FaIcons.FaFlagUsa/>,
         cName: 'nav-text',
     },
     {
