@@ -13,15 +13,56 @@ def api():
         departmentRequested = request.json
 
         courseDataList = []
+        prerequisiteDataList = []
+        corequisiteDataList = []
 
         if departmentRequested:
-            courseData = courseDatabaseCursor.execute('SELECT * FROM courses WHERE department = ?', (departmentRequested['departmentName'],)).fetchall()
-        
+            query = '''
+                    SELECT id, course_code, name, description, all_course_info
+                    FROM courses
+                    WHERE department = ?
+                    '''
+
+            courseData = courseDatabaseCursor.execute(query, (departmentRequested['departmentName'],)).fetchall()
             for row in courseData:
                 courseDataList.append(dict(row))
         
         
+            query = '''
+                    SELECT courses.course_code, prerequisiteCourse.name, 
+                    prerequisiteCourse.course_code AS prerequisiteCourseCode, 
+                    prerequisiteCourse.description,
+                    prerequisiteCourse.all_course_info
+                    FROM courses
+                    JOIN prerequisites
+                    ON courses.id = prerequisites.course_id
+                    JOIN courses prerequisiteCourse 
+                    ON prerequisites.prerequisite_id = prerequisiteCourse.id
+                    WHERE courses.department = ?;
+                    '''
+            prerequisiteData = courseDatabaseCursor.execute(query, (departmentRequested['departmentName'],)).fetchall()
+            for row in prerequisiteData:
+                prerequisiteDataList.append(dict(row))
 
+            query = '''
+                    SELECT courses.course_code, 
+                    corequisiteCourse.name, 
+                    corequisiteCourse.course_code AS corequisiteCourseCode, 
+                    corequisiteCourse.description,
+                    corequisiteCourse.all_course_info
+                    FROM courses
+                    JOIN corequisites
+                    ON courses.id = corequisites.course_id
+                    JOIN courses corequisiteCourse 
+                    ON corequisites.corequisite_id = corequisiteCourse.id
+                    WHERE courses.department = ?;
+                    '''
 
-        return {'courseData':courseDataList}
+            corequisiteData = courseDatabaseCursor.execute(query, (departmentRequested['departmentName'],)).fetchall()
+            for row in corequisiteData:
+                corequisiteDataList.append(dict(row))
+
+        courseDatabaseConnection.close()
+
+        return {'courseData':courseDataList, 'prerequisiteData': prerequisiteDataList, 'corequisiteData': corequisiteDataList}
 
