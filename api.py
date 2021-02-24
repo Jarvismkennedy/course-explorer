@@ -1,8 +1,12 @@
 from flask import Flask, jsonify, request
 import sqlite3
 import json
-app = Flask(__name__)
+import os
+app = Flask(__name__, static_folder='../course-explorer-front/build', static_url_path='/')
 
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
 
 @app.route('/api', methods = ['POST'])
 def api():
@@ -64,3 +68,5 @@ def api():
 
         return {'courseData':courseDataList, 'prerequisiteData': prerequisiteDataList, 'corequisiteData': corequisiteDataList}
 
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', debug=False, port=os.environ.get('PORT', 80))
