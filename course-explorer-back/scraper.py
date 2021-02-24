@@ -33,13 +33,15 @@ for department in departments:
         course_code = department_course_source_code.find('p', class_= 'titlestyle').get_text()[:8]
 
         # all_course_info is used later to extract course codes for prerequisites using regex
-        all_course_info = department_course_source_code.find('span', class_='normaltext').get_text()
-        all_course_info_split_newline = re.split('\n', all_course_info)
-        course_description = all_course_info_split_newline[1]
+
+        all_course_info = department_course_source_code.find('span', class_='normaltext')
+        for br in all_course_info.find_all('br'):
+            br.replace_with('\n')
+        all_course_info = all_course_info.get_text()
         course_department = department.get_text()
 
-        courses_db.execute('INSERT INTO courses (name, course_code, description, department, all_course_info) VALUES(?, ?, ?, ?, ?)', 
-                            (course_name, course_code, course_description, course_department, all_course_info))
+        courses_db.execute('INSERT INTO courses (name, course_code, department, all_course_info) VALUES(?, ?, ?, ?)', 
+                            (course_name, course_code, course_department, all_course_info))
 
         
 courses_db_connection.commit()

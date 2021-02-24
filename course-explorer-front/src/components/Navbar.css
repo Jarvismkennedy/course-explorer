@@ -1,0 +1,25 @@
+body{
+    background-color: #D0CEBB;
+    overflow-x: hidden;
+}
+.course-explorer-navbar{
+    background-color: #17293F;
+    color: white;
+}
+
+.nav-dropdown{
+    height: 500px;
+    overflow-y: auto;
+}
+span{
+    margin:1%;
+}
+@import url('https://fonts.googleapis.com/css2?family=Varela&display=swap');
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Varela', sans-serif;
+}
+
+

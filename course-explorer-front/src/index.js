@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import GraphPage from './Pages/GraphPage';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <GraphPage />
   </React.StrictMode>,
   document.getElementById('root')
 );

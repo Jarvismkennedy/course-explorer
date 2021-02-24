@@ -1,21 +1,33 @@
-import React, {useState} from 'react';
-import ReactFlow, {ReactFlowProvider, Controls} from 'react-flow-renderer'
-import './CourseTree.css';
-import CourseListSideBar from './CourseListSideBar'
-
- export default function DepartmentCourseTree(props){
-    const [courseName, setCourseName] = useState('allCourses')
-
-    const courseList = ['All Courses',]
-    for (let courseCode in props.courseDataDictionary){
-        courseList.push(props.courseDataDictionary[courseCode].courseName)
+export default function generateGraphElements (course, allCourseDataDictionary){
+        
+    var courseDataDictionary = {};
+    if (course === undefined || course === 'All Courses'){
+        courseDataDictionary = allCourseDataDictionary;
     }
+    else{
+        
+        courseDataDictionary[course] = allCourseDataDictionary[course];
+        var prerequisites = courseDataDictionary[course].prerequisiteCourseCodes.slice();
+        
+            while (prerequisites.length > 0){
+                let courseCode = prerequisites.pop();
+                courseDataDictionary[courseCode] = allCourseDataDictionary[courseCode];
+                
+                let newPrerequisiteList = allCourseDataDictionary[courseCode].prerequisiteCourseCodes;
+                let newPrerequisiteListLength = newPrerequisiteList.length;
+                for (let index = 0; index < newPrerequisiteListLength; index++){
+                    prerequisites.push(newPrerequisiteList[index])
+                }
+            } 
+        }  
 
     const fourthYearCourses = [];
     const thirdYearCourses = [];
     const secondYearCourses = [];
     const firstYearCourses = [];
-    for (let courseCode in props.courseDataDictionary){
+
+    for (let courseCode in courseDataDictionary){
+        
         if (courseCode[3] === '4'){
             fourthYearCourses.push(courseCode)
         }
@@ -28,7 +40,9 @@ import CourseListSideBar from './CourseListSideBar'
         else {
             firstYearCourses.push(courseCode)
         }
+        
     }
+   
 
     const fourthYearCoursesLength = fourthYearCourses.length;
     const thirdYearCoursesLength = thirdYearCourses.length;
@@ -47,6 +61,7 @@ import CourseListSideBar from './CourseListSideBar'
         elements.push({
             id: fourthYearCourses[index],
             type: 'input',
+            connectable: false,
             data: {label: fourthYearCourses[index]},
             position: {x: 25 + dx*175, y: 25 + dy*100}
         })
@@ -63,6 +78,7 @@ import CourseListSideBar from './CourseListSideBar'
         elements.push({
             id: thirdYearCourses[index],
             type: 'input',
+            connectable: false,
             data: {label: thirdYearCourses[index]},
             position: {x: 25 + dx*175, y: 25 + dy*100}
         })
@@ -79,6 +95,7 @@ import CourseListSideBar from './CourseListSideBar'
         elements.push({
             id: secondYearCourses[index],
             type: 'input',
+            connectable: false,
             data: {label: secondYearCourses[index]},
             position: {x: 25 + dx*175, y: 25 + dy*100}
         })
@@ -91,47 +108,31 @@ import CourseListSideBar from './CourseListSideBar'
             dx = 0;
             dy++;
         }
-
+        
         elements.push({
             id: firstYearCourses[index],
             type: 'input',
+            connectable: false,
             data: {label: firstYearCourses[index]},
             position: {x: 25 + dx*175, y: 25 + dy*100}
         })
         dx++;
     }
-    for (let courseCode in props.courseDataDictionary){
-        let prerequisiteList = props.courseDataDictionary[courseCode].prerequisiteCourseCodes;
+    for (let courseCode in courseDataDictionary){
+        let prerequisiteList = courseDataDictionary[courseCode].prerequisiteCourseCodes;
         let prerequisiteListLength = prerequisiteList.length;
         for (let index = 0; index < prerequisiteListLength; index++){
             elements.push({
                 id: 'e' + prerequisiteList[index] + '-' + courseCode,
                 source: prerequisiteList[index],
-                target: courseCode
+                target: courseCode,
+                animated: true,
+                arrowHeadType: 'arrowclosed',
+                sourcePosition: 'top',
+                targetPosition: 'bottom',
             })
         }
         
     }
-    function onElementClick(){
-
-    }
-    
-const FlowWithProvider = () => (
-    <ReactFlowProvider onElementClick={onElementClick}>
-      <ReactFlow elements={elements}>
-        <Controls/>
-        </ReactFlow>
-    </ReactFlowProvider>
-  );
-        
-  console.log(courseList);
-    return (
-        <div>
-            <CourseListSideBar courseList = {courseList} setCourseName = {setCourseName}/>
-            <div style = {{height: window.innerHeight-100}}>
-                {FlowWithProvider()}
-            </div>
-        </div>
-        
-      );
+    return elements;
 }

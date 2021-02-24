@@ -12,7 +12,7 @@ export default function GenerateDictionaries(props){
           courseDataDictionary[course.course_code] = {
           courseName: course.name, 
           courseCode: course.course_code, 
-          courseDescription: course.description,
+          courseDescription: course.all_course_info,
           prerequisiteCourseCodes: [],
           corequisiteCourseCodes: []
         }
@@ -30,11 +30,12 @@ export default function GenerateDictionaries(props){
           courseDataDictionary[prerequisite.prerequisiteCourseCode] = {
           courseName : prerequisite.name,
           courseCode : prerequisite.prerequisiteCourseCode,
-          courseDescription : prerequisite.description,
+          courseDescription : prerequisite.all_course_info,
           prerequisiteCourseCodes: [],
           corequisiteCourseCodes: []
         }
       }
+      
       courseDataDictionary[prerequisite.course_code].prerequisiteCourseCodes.push(prerequisite.prerequisiteCourseCode);
     }
   }
@@ -49,7 +50,7 @@ export default function GenerateDictionaries(props){
           courseDataDictionary[corequisite.corequisiteCourseCode] = {
           courseName : corequisite.name,
           courseCode : corequisite.course_code,
-          courseDescription : corequisite.description,
+          courseDescription : corequisite.all_course_info,
           prerequisiteCourseCodes: [],
           corequisiteCourseCodes: []
 
@@ -59,5 +60,41 @@ export default function GenerateDictionaries(props){
     }
   }
 
+  // remove the prerequisite if it appears in a path through other courses
+
+  for (let courseCode in courseDataDictionary){
+    let prerequisiteList = courseDataDictionary[courseCode].prerequisiteCourseCodes;
+    let prerequisiteListLength = prerequisiteList.length;
+    for (let index = 0; index < prerequisiteListLength; index++){
+      let prerequisiteCourseCode = prerequisiteList[index];
+      if (existsPathToPrerequisite(courseDataDictionary, prerequisiteCourseCode, courseCode, index)){
+        prerequisiteList.splice(index, 1);
+        index--;
+        prerequisiteListLength--; 
+      }
+    }
+  }
   props.setCourseDataDictionary(courseDataDictionary);
+}
+
+
+// function to search the graph for a path an alternate path to the prerequisite
+function existsPathToPrerequisite (courseDataDictionary, prerequisiteCourseCode, courseCode, indexOfPrerequisite){
+  let prerequisiteList = courseDataDictionary[courseCode].prerequisiteCourseCodes;
+  let prerequisiteListLength = prerequisiteList.length;
+
+  if (prerequisiteCourseCode === courseCode){
+    return true;
+  }
+  for (let index = 0; index < prerequisiteListLength; index++){
+    if(index !== indexOfPrerequisite){
+      let newCourseCode = prerequisiteList[index];
+      let newIndexOfPrerequisite = index;
+      let existsPath = existsPathToPrerequisite(courseDataDictionary, prerequisiteCourseCode, newCourseCode, newIndexOfPrerequisite);
+      if (existsPath){
+        return true;
+      }
+    }
+  }
+  return false;
 }

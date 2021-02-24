@@ -18,7 +18,7 @@ def api():
 
         if departmentRequested:
             query = '''
-                    SELECT id, course_code, name, description, all_course_info
+                    SELECT id, course_code, name, all_course_info
                     FROM courses
                     WHERE department = ?
                     '''
@@ -31,7 +31,6 @@ def api():
             query = '''
                     SELECT courses.course_code, prerequisiteCourse.name, 
                     prerequisiteCourse.course_code AS prerequisiteCourseCode, 
-                    prerequisiteCourse.description,
                     prerequisiteCourse.all_course_info
                     FROM courses
                     JOIN prerequisites
@@ -48,7 +47,6 @@ def api():
                     SELECT courses.course_code, 
                     corequisiteCourse.name, 
                     corequisiteCourse.course_code AS corequisiteCourseCode, 
-                    corequisiteCourse.description,
                     corequisiteCourse.all_course_info
                     FROM courses
                     JOIN corequisites

@@ -1,0 +1,18 @@
+
+.tree{
+    background-color: white;
+    height: 80vh;
+    margin: 2%;
+    border-radius: 10px;
+    border: 2px solid #272B2C;
+    margin-top: 0.5%;
+    padding-top: 0.5%;
+    padding-bottom: 2%;
+}
+.currentCourseLabel{
+    position:relative;
+    margin:auto;
+    left: 2%;
+    text-align: left;
+    color: #272B2C;
+  }

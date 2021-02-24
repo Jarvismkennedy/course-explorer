@@ -16,7 +16,7 @@ import * as GoIcons from 'react-icons/go'
 import * as ImIcons from 'react-icons/im'
 
 
-export const SideBarData = [
+export const departmentData = [
     {
         title:'Anthropology',
         path: '/Anthropology',
