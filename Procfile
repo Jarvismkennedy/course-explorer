@@ -1,1 +1,1 @@
-web: gunicorn api.py:utm-course-explorer
+web: gunicorn server:app
