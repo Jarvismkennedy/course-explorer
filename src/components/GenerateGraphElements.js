@@ -28,9 +28,6 @@ function generateCourseDictionaryByYear (courseDataDictionary){
     for (let courseCode in courseDataDictionary){
         // CourseCodes are of the form MAT137H5, where the digit at the third index represents the course year
         const year = courseCode[3];
-        if (year === 'r'){
-            console.log(courseCode);
-        }
         courseDictionaryByYear[year].push(courseCode);
     }
     return courseDictionaryByYear;
