@@ -21,7 +21,7 @@ def api():
         prerequisiteDataList = []
         corequisiteDataList = []
 
-        if departmentRequested:
+        if departmentRequested != 'Home':
             query = '''
                     SELECT id, course_code, name, all_course_info
                     FROM courses

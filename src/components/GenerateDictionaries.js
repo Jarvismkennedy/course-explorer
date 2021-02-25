@@ -14,7 +14,6 @@ export default function GenerateDictionaries(props){
           courseCode: course.course_code, 
           courseDescription: course.all_course_info,
           prerequisiteCourseCodes: [],
-          corequisiteCourseCodes: []
         }
       }
     }
@@ -32,7 +31,6 @@ export default function GenerateDictionaries(props){
           courseCode : prerequisite.prerequisiteCourseCode,
           courseDescription : prerequisite.all_course_info,
           prerequisiteCourseCodes: [],
-          corequisiteCourseCodes: []
         }
       }
       
@@ -40,28 +38,9 @@ export default function GenerateDictionaries(props){
     }
   }
 
-  if (props.corequisiteData !== undefined){
-
-    const corequisiteDataLength = props.corequisiteData.length;
-    for (index = 0; index < corequisiteDataLength; index++){
-
-      const corequisite = props.corequisiteData[index];
-      if (!(corequisite.corequisiteCourseCode in courseDataDictionary)){
-          courseDataDictionary[corequisite.corequisiteCourseCode] = {
-          courseName : corequisite.name,
-          courseCode : corequisite.course_code,
-          courseDescription : corequisite.all_course_info,
-          prerequisiteCourseCodes: [],
-          corequisiteCourseCodes: []
-
-        }
-      }
-      courseDataDictionary[corequisite.course_code].corequisiteCourseCodes.push(corequisite.corequisiteCourseCode);
-    }
-  }
-
-  // remove the prerequisite if it appears in a path through other courses
-
+  // Remove prerequisite if it appears in a path through other courses. 
+  // E.g. if MAT102 -> MAT224 -> MAT337, and MAT102 -> MAT337, then remove MAT102 from the 
+  // MAT337 prerequisite list
   for (let courseCode in courseDataDictionary){
     let prerequisiteList = courseDataDictionary[courseCode].prerequisiteCourseCodes;
     let prerequisiteListLength = prerequisiteList.length;
@@ -78,12 +57,11 @@ export default function GenerateDictionaries(props){
 }
 
 
-// function to search the graph for a path an alternate path to the prerequisite
-function existsPathToPrerequisite (courseDataDictionary, prerequisiteCourseCode, courseCode, indexOfPrerequisite){
-  let prerequisiteList = courseDataDictionary[courseCode].prerequisiteCourseCodes;
-  let prerequisiteListLength = prerequisiteList.length;
 
-  if (prerequisiteCourseCode === courseCode){
+function existsPathToPrerequisite (courseDataDictionary, prerequisiteCourseCode, sourceCourseCode, indexOfPrerequisite){
+  let prerequisiteList = courseDataDictionary[sourceCourseCode].prerequisiteCourseCodes;
+  let prerequisiteListLength = prerequisiteList.length;
+  if (prerequisiteCourseCode === sourceCourseCode){
     return true;
   }
   for (let index = 0; index < prerequisiteListLength; index++){

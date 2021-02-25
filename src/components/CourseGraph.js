@@ -77,7 +77,7 @@ function CourseModal(props) {
                 modalTitle = {modalTitle}
                 modalDescription = {modalDescription}
             />
-            <div className = 'tree'>
+            <div className = 'courseGraph'>
                 <div className = 'currentCourseLabel'>
                     {currentCourseLabel()}
                 </div>
