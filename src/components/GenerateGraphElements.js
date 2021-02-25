@@ -20,10 +20,10 @@ function generateCourseDataDictionaryForSelectedCourse(course, allCourseDataDict
 }
 function generateCourseDictionaryByYear (courseDataDictionary){
     const courseDictionaryByYear = {
-        '1': [],
-        '2': [],
-        '3': [],
-        '4': []
+        1: [],
+        2: [],
+        3: [],
+        4: []
     }
     for (let courseCode in courseDataDictionary){
         // CourseCodes are of the form MAT137H5, where the digit at the third index represents the course year
