@@ -19,7 +19,7 @@ function generateCourseDataDictionaryForSelectedCourse(course, allCourseDataDict
     return courseDataDictionary;
 }
 function generateCourseDictionaryByYear (courseDataDictionary){
-    const courseDictionaryByYear = {
+    const courseListDictionaryByYear = {
         1: [],
         2: [],
         3: [],
@@ -28,21 +28,21 @@ function generateCourseDictionaryByYear (courseDataDictionary){
     for (let courseCode in courseDataDictionary){
         // CourseCodes are of the form MAT137H5, where the digit at the third index represents the course year
         const year = courseCode[3];
-        courseDictionaryByYear[year].push(courseCode);
+        courseListDictionaryByYear[year].push(courseCode);
     }
-    return courseDictionaryByYear;
+    return courseListDictionaryByYear;
 }
 
 export default function generateGraphElements (course, allCourseDataDictionary){
     const courseDataDictionary = generateCourseDataDictionaryForSelectedCourse(course, allCourseDataDictionary);
-    const courseDictionaryByYear = generateCourseDictionaryByYear(courseDataDictionary);
+    const courseListDictionaryByYear = generateCourseDictionaryByYear(courseDataDictionary);
     const elements = []
     var dx = 0;
     var dy = 0;
 
-    for (let year in courseDictionaryByYear){
-        let courseList = courseDictionaryByYear[year];
-        let courseListLength = courseDictionaryByYear[year].length
+    for (let year in courseListDictionaryByYear){
+        let courseList = courseListDictionaryByYear[year];
+        let courseListLength = courseListDictionaryByYear[year].length
         for(let index = 0; index < courseListLength; index++){
             if (dx > 7){
                 dx = 0;
